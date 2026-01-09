@@ -8,6 +8,11 @@ display(df_books)
 
 # COMMAND ----------
 
+# MAGIC %md
+# MAGIC Criação de uma função para transformar uma coluna específica
+
+# COMMAND ----------
+
 def apply_discount(price, percentage):
     return price * (1 - percentage/100)
 
@@ -17,18 +22,25 @@ apply_discount(100, 20)
 
 # COMMAND ----------
 
+# MAGIC %md
+# MAGIC Para aplicar a função em um dataframe, precisamos registar a função como UDF
+
+# COMMAND ----------
+
 apply_discount_udf = udf(apply_discount)
 
 # COMMAND ----------
 
 from pyspark.sql.functions import col, lit
 
-df_discounts = df_books.select("price", apply_discount_udf(col("price"), lit(50)))
+df_discounts = df_books.select("price", apply_discount_udf(col("price"), lit(50)))# Utilizando a função e aplicando 50% de desconto
 display(df_discounts)
 
 # COMMAND ----------
 
-apply_discount_py_udf = spark.udf.register("apply_discount_sql_udf", apply_discount)
+apply_discount_py_udf = spark.udf.register("apply_discount_sql_udf", apply_discount) #Este comando permite utilizar a função no SQL
+# Nota que aqui criaremos uma função SQL nomeada apply_discount_sql_udf
+# e outra função Python nomeada apply_discount_py_udf
 
 # COMMAND ----------
 
@@ -43,18 +55,20 @@ display(df_discounts)
 
 # COMMAND ----------
 
+# outra forma de declarar uma udf
 @udf("double")
 def apply_discount_decorator_udf(price, percentage):
     return price * (1 - percentage/100)
 
 # COMMAND ----------
 
-#apply_discount_decorator_udf(100, 20)
+df_discounts = df_books.select("price", apply_discount_decorator_udf(col("price"), lit(50)))
+display(df_discounts)
 
 # COMMAND ----------
 
-df_discounts = df_books.select("price", apply_discount_decorator_udf(col("price"), lit(50)))
-display(df_discounts)
+# MAGIC %md
+# MAGIC ## Otimizando UDF no Python
 
 # COMMAND ----------
 

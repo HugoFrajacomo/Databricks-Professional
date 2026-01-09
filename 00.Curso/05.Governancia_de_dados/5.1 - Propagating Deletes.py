@@ -33,6 +33,11 @@ schema = "customer_id STRING, email STRING, first_name STRING, last_name STRING,
 
 # COMMAND ----------
 
+# MAGIC %md
+# MAGIC lista de usuário que devem ser deletados
+
+# COMMAND ----------
+
 # MAGIC %sql
 # MAGIC SELECT * FROM delete_requests
 
@@ -92,7 +97,7 @@ def process_deletes(microBatchDF, batchId):
 # COMMAND ----------
 
 # MAGIC %sql
-# MAGIC SELECT * FROM customers_orders@v6
+# MAGIC SELECT * FROM customers_orders@v5 --Versão altera dependendo da sua execução
 # MAGIC EXCEPT
 # MAGIC SELECT * FROM customers_orders
 
